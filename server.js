@@ -82,7 +82,18 @@ app.get('/frutas/:id', (req, res) => {
  * 6. Debe retornar la fruta creada con status 201.
  */
 app.post('/frutas', (req, res) => {
-  // Tu código aquí
+  const data = fs.readFileSync(dataFilePath, 'utf8');
+  const frutas = JSON.parse(data);
+  const maxId = frutas.reduce((max, fruta) => Math.max(max, fruta.id), 0);
+  const nuevaFruta = {
+    ...req.body,
+    id: maxId + 1,
+  };
+
+  frutas.push(nuevaFruta);
+  fs.writeFileSync(dataFilePath, JSON.stringify(frutas, null, 4), 'utf8');
+
+  res.status(201).json(nuevaFruta);
 });
 
 // Iniciar el servidor
