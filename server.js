@@ -47,7 +47,14 @@ app.get('/frutas', (req, res) => {
  * IMPORTANTE: ¡Esta ruta debe ir ANTES que la ruta GET /frutas/:id!
  */
 app.get('/frutas/buscar', (req, res) => {
-  // Tu código aquí
+  const nombre = (req.query.nombre || '').toLowerCase();
+  const data = fs.readFileSync(dataFilePath, 'utf8');
+  const frutas = JSON.parse(data);
+  const frutasFiltradas = frutas.filter((fruta) =>
+    fruta.nombre.toLowerCase().includes(nombre)
+  );
+
+  res.status(200).json(frutasFiltradas);
 });
 
 /**
